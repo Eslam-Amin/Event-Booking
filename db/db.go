@@ -23,7 +23,12 @@ func InitDB(){
 
 
 func createTables(){
-	createEventsTable := `CREATE TABLE IF NOT EXISTS events(
+	createEventsTable()
+}
+
+
+func createEventsTable(){
+createEventsTable := `CREATE TABLE IF NOT EXISTS events(
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
 		name TEXT NOT NULL,
 		description TEXT NOT NULL,
