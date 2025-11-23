@@ -26,6 +26,22 @@ func createTables(){
 	createEventsTable()
 }
 
+func createUsersTable(){
+	query := `
+	CREATE TABLE IF NOT EXISTS users(
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		name TEXT NOT NULL,
+		email TEXT NOT NULL,
+		password TEXT NOT NULL
+	);
+	`
+
+	_, err := DB.Exec(query)
+	if err != nil{
+		fmt.Println("err in creating users table ",err)
+		panic(err)
+	}
+}
 
 func createEventsTable(){
 query := `CREATE TABLE IF NOT EXISTS events(
