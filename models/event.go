@@ -14,6 +14,15 @@ type Event struct {
 
 var events = []Event{} 
 
+func (event *Event) Save(){
+	// later: add it to a database 
+	events = append(events, *event)
+}
+
+func GetAllEvents() []Event{
+	return events
+}
+
 func New() *Event{
 
 	return &Event{}
