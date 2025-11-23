@@ -12,7 +12,7 @@ type User struct {
 
 func (user *User) Save() error {
 	query := `
-	INSERT TO users
+	INSERT INTO users
 	(name, email, password)
 	VALUES (?, ?, ?)
 	`
