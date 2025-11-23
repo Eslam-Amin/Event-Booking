@@ -1,0 +1,52 @@
+# ─────────────────────────────
+# Build / Binary artifacts
+# ─────────────────────────────
+bin/
+build/
+dist/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+
+# Go build output in project root
+main
+*.log
+
+# ─────────────────────────────
+# Go Vendor (optional)
+# ─────────────────────────────
+# If you run `go mod vendor`, uncomment the line below:
+# vendor/
+
+# ─────────────────────────────
+# IDE / Editor files
+# ─────────────────────────────
+# VS Code
+.vscode/
+*.code-workspace
+
+# JetBrains (GoLand)
+.idea/
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+*.swp
+*.swo
+
+# Emacs
+*~
+
+# MacOS Finder files
+.DS_Store
+
+# Windows
+Thumbs.db
+
+# ──
