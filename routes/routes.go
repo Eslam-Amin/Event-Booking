@@ -6,9 +6,12 @@ import (
 )
 
 func RegisterRoutes(server *gin.Engine){
-	server.GET("/events", controllers.GetAllEvents)
-	server.GET("/events/:id", controllers.GetEventById)
-	server.POST("/events", controllers.CreateEvent)
-	server.PUT("/events/:id", controllers.UpdateEvent)
-	server.DELETE("/events/:id", controllers.DeleteEvent)
+	books := server.Group("/events")
+	{
+		books.GET("/", controllers.GetAllEvents)
+		books.POST("/", controllers.CreateEvent)
+		books.GET("/:id", controllers.GetEventById)
+		books.PUT("/:id", controllers.UpdateEvent)
+		books.DELETE("/:id", controllers.DeleteEvent)
+	}
 }
