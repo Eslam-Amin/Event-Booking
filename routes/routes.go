@@ -14,4 +14,9 @@ func RegisterRoutes(server *gin.Engine){
 		books.PUT("/:id", controllers.UpdateEvent)
 		books.DELETE("/:id", controllers.DeleteEvent)
 	}
+
+	auth := server.Group("/auth")
+	{
+		auth.POST("/signup", controllers.Singup)
+	}
 }
