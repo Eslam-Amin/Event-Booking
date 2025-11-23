@@ -56,6 +56,40 @@ func (event *Event) Save() error {
     return nil
 }
 
+func (event *Event) Update()error{
+    query :=`
+    UPDATE events 
+    SET name = ?,
+    description = ?,
+    location = ?,
+    event_date = ?
+    WHERE id = ?
+    `
+    stmt, err := db.DB.Prepare(query)
+    if err != nil{
+        return err
+    }
+    defer stmt.Close()
+    _, err = stmt.Exec(event.Name, event.Description, event.Location, event.EventDate, event.ID)
+    return err
+}
+
+func (event *Event) Delete()error{
+    query := `
+    DELETE FROM events WHERE id = ?
+    `
+    stmt, err := db.DB.Prepare(query)
+    if err != nil {
+        return err
+    }
+    
+    defer stmt.Close()
+    _, err = stmt.Exec(event.ID)
+    if err != nil {
+        return err
+    }
+    return nil
+}
 
 func GetAllEvents() ([]Event, error){
 	query := `SELECT * from events`
@@ -92,41 +126,6 @@ func GetEventById(eventId int64) (*Event, error){
         return nil, err
     }
     return &event, nil
-}
-
-func (event *Event) Update()error{
-    query :=`
-    UPDATE events 
-    SET name = ?,
-    description = ?,
-    location = ?,
-    event_date = ?
-    WHERE id = ?
-    `
-    stmt, err := db.DB.Prepare(query)
-    if err != nil{
-        return err
-    }
-    defer stmt.Close()
-    _, err = stmt.Exec(event.Name, event.Description, event.Location, event.EventDate, event.ID)
-    return err
-}
-
-func (event *Event) Delete()error{
-    query := `
-    DELETE FROM events WHERE id = ?
-    `
-    stmt, err := db.DB.Prepare(query)
-    if err != nil {
-        return err
-    }
-    
-    defer stmt.Close()
-    _, err = stmt.Exec(event.ID)
-    if err != nil {
-        return err
-    }
-    return nil
 }
 
 func NewEvent() *Event{
