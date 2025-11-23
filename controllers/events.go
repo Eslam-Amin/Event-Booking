@@ -55,7 +55,7 @@ func GetEventById(context *gin.Context){
 	eventId, err := strconv.ParseInt(context.Param("id"), 10 , 64)
 	if err != nil{
 		context.JSON(http.StatusBadRequest, gin.H{
-			"message": "Couldn't parse request data.",
+			"message": "Couldn't parse request param.",
 		})
 		return
 	}
