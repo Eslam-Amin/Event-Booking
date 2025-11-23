@@ -28,8 +28,9 @@ func createTables(){
 		name TEXT NOT NULL,
 		description TEXT NOT NULL,
 		location TEXT NOT NULL,
-		date_time DATETIME NOT NULL,
-		user_id INTEGER NOT NULL
+		event_date DATETIME NOT NULL,
+		user_id INTEGER NOT NULL,
+		created_at DATETIME NOT NULL
 		);`
 		
 		
