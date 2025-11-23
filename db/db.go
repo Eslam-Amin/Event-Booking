@@ -18,12 +18,13 @@ func InitDB(){
 	
 	DB.SetMaxOpenConns(10)
 	DB.SetMaxIdleConns(5)
-	createTables()
+	createDBTables()
 }
 
 
-func createTables(){
+func createDBTables(){
 	createEventsTable()
+	createUsersTable()
 }
 
 func createUsersTable(){
