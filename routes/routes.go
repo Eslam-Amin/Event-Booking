@@ -7,16 +7,16 @@ import (
 )
 
 func RegisterRoutes(server *gin.Engine) {
-	books := server.Group("/events")
+	events := server.Group("/events")
 	{
-		books.GET("/", controllers.GetAllEvents)
-		books.GET("/:id", controllers.GetEventById)
-		protectedBooks := books.Group("/")
-		protectedBooks.Use(middlewares.Authticate)
-		protectedBooks.Use(middlewares.Authorize)
-		protectedBooks.POST("/", controllers.CreateEvent)
-		protectedBooks.PUT("/:id", controllers.UpdateEvent)
-		protectedBooks.DELETE("/:id", controllers.DeleteEvent)
+		events.GET("/", controllers.GetAllEvents)
+		events.GET("/:id", controllers.GetEventById)
+		protectedEvents := events.Group("/")
+		protectedEvents.Use(middlewares.Authticate)
+		protectedEvents.Use(middlewares.Authorize)
+		protectedEvents.POST("/", controllers.CreateEvent)
+		protectedEvents.PUT("/:id", controllers.UpdateEvent)
+		protectedEvents.DELETE("/:id", controllers.DeleteEvent)
 	}
 
 	auth := server.Group("/auth")
