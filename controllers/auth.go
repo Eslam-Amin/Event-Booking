@@ -3,13 +3,16 @@ package controllers
 import (
 	"net/http"
 
+	"example.com/event-booking/dtos"
 	"example.com/event-booking/models"
+	"example.com/event-booking/utils"
 	"github.com/gin-gonic/gin"
 )
 
 func Singup(context *gin.Context){
-	var user models.User
-	err := context.BindJSON(&user)
+	var signupCredentials dtos.SignupCredentials
+
+	err := context.BindJSON(&signupCredentials)
 	if err != nil{
 		context.JSON(http.StatusBadRequest, gin.H{
 			"message": "Couldn't parse request data.",
@@ -17,7 +20,9 @@ func Singup(context *gin.Context){
 		})
 		return
 	}
-	
+
+	user := models.NewUser(signupCredentials.Name, signupCredentials.Email, signupCredentials.Password)
+
 	err = user.Save()
 	if err != nil{
 		context.JSON(http.StatusInternalServerError, gin.H{
@@ -35,7 +40,7 @@ func Singup(context *gin.Context){
 
 func Login(context *gin.Context){
 	var user *models.User
-	var loginCredentials models.LoginCredentials
+	var loginCredentials dtos.LoginCredentials
 	err := context.ShouldBindJSON(&loginCredentials)
 	if err != nil {
 		context.JSON(http.StatusBadRequest, gin.H{
@@ -61,9 +66,21 @@ func Login(context *gin.Context){
 		return
 	}
 
+	token, err := utils.GenerateToken(user.Email, user.ID)
+	if err != nil{
+		context.JSON(http.StatusInternalServerError, gin.H{
+			"message": "Couldn't generate token, try again later!",
+			"error": err.Error(),
+		})
+		return
+	}
+	
 	context.JSON(http.StatusOK, gin.H{
 		"message": "Login successful",
-		"data": user,
+		"data": gin.H{
+			"token": token,
+			"user":user,
+		},
 	})
 
 
