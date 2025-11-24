@@ -2,6 +2,7 @@ package models
 
 import (
 	"errors"
+	"strings"
 
 	"example.com/event-booking/db"
 	"example.com/event-booking/utils"
@@ -35,7 +36,7 @@ func (user *User) Save() error {
 	if err != nil{
 		return err
 	}
-	result, err := stmt.Exec(user.Name, user.Email, hashedPassword)
+	result, err := stmt.Exec(user.Name, strings.ToLower(strings.TrimSpace(user.Email)), hashedPassword)
 	if err != nil{
 		return err
 	}
@@ -83,7 +84,7 @@ func GetUserByEmail(email string) (*User, error){
 	select * from users where email = ?;
 	`
 	var user User
-	row := db.DB.QueryRow(query, email)
+	row := db.DB.QueryRow(query, strings.ToLower(strings.TrimSpace(email)))
 	err := row.Scan(&user.ID, &user.Name, &user.Email, &user.Password)
 	if err != nil {
 		return nil, err
