@@ -12,7 +12,7 @@ type User struct {
 	ID int64
 	Name string `binding:"required"`
 	Email string `binding:"required"`
-	Password string `binding:"required"`
+	Password string `json:"-"`
 }
 
 type LoginCredentials struct {
