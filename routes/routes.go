@@ -32,5 +32,6 @@ func RegisterRoutes(server *gin.Engine) {
 	{
 		users.GET("/", controllers.GetAllUsers)
 		users.GET("/:id", controllers.GetUserById)
+		users.GET("/:id/registrations", controllers.GetUsersRegistration)
 	}
 }
