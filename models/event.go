@@ -127,6 +127,28 @@ func GetEventById(eventId int64) (*Event, error) {
 	return &event, nil
 }
 
+func (event *Event) RegisterUserForEvent(userId int64) error {
+	query := `
+		INSERT INTO event_registrations
+		(user_id, event_id, created_at)
+		VALUES (?, ?, ?);
+		`
+
+	stmt, err := db.DB.Prepare(query)
+	if err != nil {
+		return err
+	}
+
+	defer stmt.Close()
+
+	_, err = stmt.Exec(userId, event.ID, time.Now().UTC())
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
 func NewEvent() *Event {
 
 	return &Event{}
