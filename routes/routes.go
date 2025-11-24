@@ -32,6 +32,9 @@ func RegisterRoutes(server *gin.Engine) {
 	{
 		users.GET("/", controllers.GetAllUsers)
 		users.GET("/:id", controllers.GetUserById)
-		users.GET("/:id/registrations", controllers.GetUsersRegistration)
+		proctectedUsers := users.Group("/")
+		proctectedUsers.Use(middlewares.Authticate)
+		proctectedUsers.Use(middlewares.Authorize)
+		proctectedUsers.GET("/me/registrations", controllers.GetUsersRegistration)
 	}
 }
