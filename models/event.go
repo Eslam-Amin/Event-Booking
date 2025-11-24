@@ -127,6 +127,32 @@ func GetEventById(eventId int64) (*Event, error) {
 	return &event, nil
 }
 
+func GetRegistrationsByUserId(userId int64) ([]Event, error) {
+	query := ` 
+	SELECT e.id, e.name, e.description, e.location, e.event_date, e.user_id, e.created_at
+	FROM events e 
+	JOIN event_registrations er ON e.id = er.event_id
+	WHERE er.user_id = ?;
+	`
+	rows, err := db.DB.Query(query, userId)
+	if err != nil {
+		return nil, err
+	}
+
+	events := []Event{}
+	defer rows.Close()
+
+	for rows.Next() {
+		var event Event
+		err := rows.Scan(&event.ID, &event.Name, &event.Description, &event.Location, &event.EventDate, &event.UserID, &event.CreatedAt)
+		if err != nil {
+			return nil, err
+		}
+		events = append(events, event)
+	}
+	return events, nil
+}
+
 func (event *Event) RegisterUserForEvent(userId int64) error {
 	query := `
 		INSERT INTO event_registrations
