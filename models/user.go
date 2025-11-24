@@ -9,9 +9,9 @@ import (
 )
 
 type User struct {
-	ID int64
-	Name string `binding:"required"`
-	Email string `binding:"required"`
+	ID       int64
+	Name     string `binding:"required"`
+	Email    string `binding:"required"`
 	Password string `json:"-"`
 }
 
@@ -22,16 +22,16 @@ func (user *User) Save() error {
 	VALUES (?, ?, ?)
 	`
 	stmt, err := db.DB.Prepare(query)
-	if err != nil{
+	if err != nil {
 		return err
 	}
 	defer stmt.Close()
 	hashedPassword, err := utils.HashPassword(user.Password)
-	if err != nil{
+	if err != nil {
 		return err
 	}
 	result, err := stmt.Exec(user.Name, strings.ToLower(strings.TrimSpace(user.Email)), hashedPassword)
-	if err != nil{
+	if err != nil {
 		return err
 	}
 	userId, err := result.LastInsertId()
@@ -40,10 +40,9 @@ func (user *User) Save() error {
 	return err
 }
 
-
-func (user *User)ValidateCredentials(inputPassword string) error{
+func (user *User) ValidateCredentials(inputPassword string) error {
 	validPassword := utils.ComparePasswords(inputPassword, user.Password)
-	
+
 	if !validPassword {
 		return errors.New("invalid credentials")
 	}
@@ -51,21 +50,21 @@ func (user *User)ValidateCredentials(inputPassword string) error{
 	return nil
 }
 
-func GetAllUsers()([]User, error){
+func GetAllUsers() ([]User, error) {
 	query := `
 	Select id, name, email from users;
 	`
 	users := []User{}
 	rows, err := db.DB.Query(query)
-	if err != nil{
+	if err != nil {
 		panic(err)
 	}
 	defer rows.Close()
 
-	for rows.Next(){
-		var user User 
+	for rows.Next() {
+		var user User
 		err = rows.Scan(&user.ID, &user.Name, &user.Email)
-		if err != nil{
+		if err != nil {
 			return nil, err
 		}
 		users = append(users, user)
@@ -74,7 +73,7 @@ func GetAllUsers()([]User, error){
 	return users, nil
 }
 
-func GetUserByEmail(email string) (*User, error){
+func GetUserByEmail(email string) (*User, error) {
 	query := `
 	select * from users where email = ?;
 	`
@@ -84,14 +83,14 @@ func GetUserByEmail(email string) (*User, error){
 	if err != nil {
 		return nil, err
 	}
-	
-return &user, nil
+
+	return &user, nil
 }
 
-func NewUser(name, email, password string)*User{
+func NewUser(name, email, password string) *User {
 	return &User{
-		Name: name,
-		Email: email,
+		Name:     name,
+		Email:    email,
 		Password: password,
 	}
 }
