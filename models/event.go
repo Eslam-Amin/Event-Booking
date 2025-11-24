@@ -7,57 +7,56 @@ import (
 )
 
 type Event struct {
-	ID int64
-	Name string `binding:"required"`
-	Description string `binding:"required"`
-	Location string	`binding:"required"`
-	EventDate time.Time `binding:"required"`
-	UserID int64
-	CreatedAt time.Time
+	ID          int64
+	Name        string    `binding:"required"`
+	Description string    `binding:"required"`
+	Location    string    `binding:"required"`
+	EventDate   time.Time `binding:"required"`
+	UserID      int64
+	CreatedAt   time.Time
 }
-
 
 func (event *Event) Save() error {
 
-    if event.CreatedAt.IsZero() {
-        event.CreatedAt = time.Now().UTC()
-    }
+	if event.CreatedAt.IsZero() {
+		event.CreatedAt = time.Now().UTC()
+	}
 
-    query := `
+	query := `
     INSERT INTO events
     (name, description, location, event_date, user_id, created_at)
     VALUES (?, ?, ?, ?, ?, ?);
     `
 
-    stmt, err := db.DB.Prepare(query)
-    if err != nil {
-        return err
-    }
-    defer stmt.Close()
+	stmt, err := db.DB.Prepare(query)
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
 
-    res, err := stmt.Exec(
-        event.Name,
-        event.Description,
-        event.Location,
-        event.EventDate,
-        event.UserID,
-        event.CreatedAt,
-    )
-    if err != nil {
-        return err
-    }
+	res, err := stmt.Exec(
+		event.Name,
+		event.Description,
+		event.Location,
+		event.EventDate,
+		event.UserID,
+		event.CreatedAt,
+	)
+	if err != nil {
+		return err
+	}
 
-    id, err := res.LastInsertId()
-    if err != nil {
-        return err
-    }
+	id, err := res.LastInsertId()
+	if err != nil {
+		return err
+	}
 
-    event.ID = id
-    return nil
+	event.ID = id
+	return nil
 }
 
-func (event *Event) Update()error{
-    query :=`
+func (event *Event) Update() error {
+	query := `
     UPDATE events 
     SET name = ?,
     description = ?,
@@ -65,49 +64,49 @@ func (event *Event) Update()error{
     event_date = ?
     WHERE id = ?
     `
-    stmt, err := db.DB.Prepare(query)
-    if err != nil{
-        return err
-    }
-    defer stmt.Close()
-    _, err = stmt.Exec(event.Name, event.Description, event.Location, event.EventDate, event.ID)
-    return err
+	stmt, err := db.DB.Prepare(query)
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+	_, err = stmt.Exec(event.Name, event.Description, event.Location, event.EventDate, event.ID)
+	return err
 }
 
-func (event *Event) Delete()error{
-    query := `
+func (event *Event) Delete() error {
+	query := `
     DELETE FROM events WHERE id = ?
     `
-    stmt, err := db.DB.Prepare(query)
-    if err != nil {
-        return err
-    }
-    
-    defer stmt.Close()
-    _, err = stmt.Exec(event.ID)
-    if err != nil {
-        return err
-    }
-    return nil
+	stmt, err := db.DB.Prepare(query)
+	if err != nil {
+		return err
+	}
+
+	defer stmt.Close()
+	_, err = stmt.Exec(event.ID)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
-func GetAllEvents() ([]Event, error){
+func GetAllEvents() ([]Event, error) {
 	query := `SELECT * from events`
 	rows, err := db.DB.Query(query)
 
-	if err != nil{
+	if err != nil {
 		return nil, err
 	}
-	
+
 	events := []Event{}
-	
+
 	defer rows.Close()
-	
-	for rows.Next(){
+
+	for rows.Next() {
 		var event Event
 		err := rows.Scan(&event.ID, &event.Name, &event.Description, &event.Location, &event.EventDate, &event.UserID, &event.CreatedAt)
-		
-		if err != nil{
+
+		if err != nil {
 			return nil, err
 		}
 
@@ -117,18 +116,18 @@ func GetAllEvents() ([]Event, error){
 	return events, nil
 }
 
-func GetEventById(eventId int64) (*Event, error){
-    query := `SELECT * from events WHERE id = ?`
-    row := db.DB.QueryRow(query, eventId)
-    var event Event
-    err := row.Scan(&event.ID, &event.Name, &event.Description, &event.Location, &event.EventDate, &event.UserID, &event.CreatedAt)
-    if err != nil {
-        return nil, err
-    }
-    return &event, nil
+func GetEventById(eventId int64) (*Event, error) {
+	query := `SELECT * from events WHERE id = ?`
+	row := db.DB.QueryRow(query, eventId)
+	var event Event
+	err := row.Scan(&event.ID, &event.Name, &event.Description, &event.Location, &event.EventDate, &event.UserID, &event.CreatedAt)
+	if err != nil {
+		return nil, err
+	}
+	return &event, nil
 }
 
-func NewEvent() *Event{
+func NewEvent() *Event {
 
 	return &Event{}
 }

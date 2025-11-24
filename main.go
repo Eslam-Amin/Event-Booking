@@ -12,9 +12,9 @@ func main() {
 	db.InitDB()
 	server := gin.Default()
 	routes.RegisterRoutes(server)
-	
-	server.GET("/ping", func (context *gin.Context){
-	
+
+	server.GET("/ping", func(context *gin.Context) {
+
 		context.JSON(http.StatusOK, gin.H{
 			"message": "pong",
 		})

@@ -8,26 +8,26 @@ import (
 )
 
 var DB *sql.DB
-func InitDB(){
+
+func InitDB() {
 	var err error
 	DB, err = sql.Open("sqlite", "api.db")
 	if err != nil {
-		fmt.Println("err in db connection ",err)
+		fmt.Println("err in db connection ", err)
 		panic("Couldn't connect to database")
 	}
-	
+
 	DB.SetMaxOpenConns(10)
 	DB.SetMaxIdleConns(5)
 	createDBTables()
 }
 
-
-func createDBTables(){
+func createDBTables() {
 	createEventsTable()
 	createUsersTable()
 }
 
-func createUsersTable(){
+func createUsersTable() {
 	query := `
 	CREATE TABLE IF NOT EXISTS users(
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -38,14 +38,14 @@ func createUsersTable(){
 	`
 
 	_, err := DB.Exec(query)
-	if err != nil{
-		fmt.Println("err in creating users table ",err)
+	if err != nil {
+		fmt.Println("err in creating users table ", err)
 		panic(err)
 	}
 }
 
-func createEventsTable(){
-query := `CREATE TABLE IF NOT EXISTS events(
+func createEventsTable() {
+	query := `CREATE TABLE IF NOT EXISTS events(
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
 		name TEXT NOT NULL,
 		description TEXT NOT NULL,
@@ -55,11 +55,10 @@ query := `CREATE TABLE IF NOT EXISTS events(
 		created_at DATETIME NOT NULL,
 		FOREIGN KEY(user_id) REFERENCES users(id) 
 		);`
-		
-		
-		_, err := DB.Exec(query) 
-		if err != nil {
-		fmt.Println("err in creating events table ",err)
+
+	_, err := DB.Exec(query)
+	if err != nil {
+		fmt.Println("err in creating events table ", err)
 		panic(err)
 	}
 }

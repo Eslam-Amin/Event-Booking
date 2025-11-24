@@ -7,17 +7,17 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func GetAllUsers(context *gin.Context){
+func GetAllUsers(context *gin.Context) {
 	users, err := models.GetAllUsers()
-	if err != nil{
+	if err != nil {
 		context.JSON(http.StatusInternalServerError, gin.H{
-			"error": err.Error(),
+			"error":   err.Error(),
 			"message": "Couldn't fetch users, try again later!",
 		})
 		return
 	}
 	context.JSON(http.StatusOK, gin.H{
-		"message":"Users fetched successfully",
-		"data":users,
+		"message": "Users fetched successfully",
+		"data":    users,
 	})
 }
